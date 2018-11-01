@@ -1,5 +1,5 @@
 (() => {
-  let RATIO = (Math.sqrt(3) / 2)
+  const RATIO = (Math.sqrt(3) / 2)
   let canvas
   let redraw = false // whether to redraw in the draw() loop
   let zoom = 1 // level of zoom. higher = more zoomed in. 1 = full triangle
@@ -16,23 +16,20 @@
   let targetOrigin = false
 
   // Control how zoomed in and small we can get!
-  let minLength = 8 // level of granularity
-  let maxZoom = 1000000
-  let zoomSpeed = 1.1
+  const minLength = 8 // level of granularity
+  const maxZoom = 1000000
+  const zoomSpeed = 1.1
 
   init()
 
   function init () {
     canvas = document.getElementById('triangle-canvas')
-    let ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d')
 
     window.addEventListener('resize', resizeCanvas)
 
     canvas.addEventListener('click', (e) => {
-      if (!moved) {
-        if (panning) console.log('PANNING')
-        animateZoom(e.shiftKey, true)
-      }
+      if (!moved) animateZoom(e.shiftKey, true)
       moved = false
     })
 
@@ -94,7 +91,7 @@
 
   // animate a zoom in or out, optionally keeping the current central point
   function animateZoom (out, centre) {
-    targetZoom = zoom * (out ? 1 / zoomSpeed : zoomSpeed) // = target_zoom * instead of = zoom * might be better
+    targetZoom = zoom * (out ? 1 / zoomSpeed : zoomSpeed) // = targetZoom * instead of = zoom * might be better
     targetZoom = Math.round(Math.min(maxZoom, Math.max(1, targetZoom)) * 10) / 10
 
     if (centre) {
@@ -109,7 +106,7 @@
 
   // scroll in a direction
   function animateScroll (nesw) {
-    let val = 50 / zoom
+    const val = 50 / zoom
     targetOrigin = {
       x: origin.x + (nesw === 'w' ? val : nesw === 'e' ? -val : 0),
       y: origin.y + (nesw === 'n' ? val : nesw === 's' ? -val : 0)
@@ -117,9 +114,9 @@
     redraw = true
   }
 
-  // out main draw loop
+  // our main draw loop
   function draw (ctx) {
-    const start = Date.now() // for animations and to check drawing speed
+    const start = Date.now()
 
     if (redraw) {
       // reset our transformation save/restore stack
@@ -173,13 +170,12 @@
       numDrawn++
 
       // recursively make the white triangles, starting with our single master triangle
-      // let recursions = Math.min(2, Math.ceil(6 + zoom / 2)) // more recursions as we zoom in
       ctx.fillStyle = 'white'
       recurseTriangles(ctx, [{ x: 0, y: 0, length: masterLength }])
 
       stackRestore(ctx)
 
-      let end = Date.now()
+      const end = Date.now()
 
       // show some info about the latest redraw
       ctx.fillStyle = 'rgba(0,0,0,.5)'
@@ -199,7 +195,7 @@
       ctx.restore()
 
       // show a mini browser
-      let miniZoom = 20
+      const miniZoom = 20
       ctx.save()
       ctx.translate(50, 100)
       ctx.scale(1 / miniZoom, 1 / miniZoom)
@@ -269,7 +265,7 @@
 
   // split a large triangle (starting from bottom-left) with sides of length into 4, drawing the middle one upside down
   function splitTriangle (ctx, length) {
-    let height = length * RATIO
+    const height = length * RATIO
 
     // draw the upside down triangle
     stackSave(ctx)
@@ -299,7 +295,7 @@
   function hitTest (triangle) {
     // coordinates of rectangle around the triangle, in the global landscape
 
-    let tc = {
+    const tc = {
       x0: coords.x - origin.x,
       x1: coords.x - origin.x + triangle.length,
       y0: coords.y - origin.y,
@@ -307,7 +303,7 @@
     }
 
     // TODO: origin.n may need division by zoom too?
-    let vc = {
+    const vc = {
       x0: -origin.x,
       x1: -origin.x + canvas.width / zoom,
       y0: -origin.y,
@@ -335,7 +331,7 @@
 
   function stackRestore (ctx) {
     ctx.restore()
-    let popped = stack.pop()
+    const popped = stack.pop()
     coords.x = popped[0]
     coords.y = popped[1]
   }
