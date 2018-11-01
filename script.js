@@ -62,9 +62,9 @@
     })
 
     window.addEventListener('keydown', (e) => {
-      if (e.keyCode === 187) animateZoom(false, true) // in
-      else if (e.keyCode === 189) animateZoom(true, true) // out
-      else if (e.keyCode === 48) {
+      if (e.key === '=') animateZoom(false, true) // in
+      else if (e.key === '-') animateZoom(true, true) // out
+      else if (e.key === '0') {
         // reset with 0
         targetZoom = 1
         targetOrigin = { x: 0, y: 0 }
