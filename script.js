@@ -13,11 +13,7 @@
   let masterLength
   let masterX
   let targetZoom = false // these needed for animations
-  // let lastZoom = false
   let targetOrigin = false
-  // let lastOrigin = false
-  // let lastDraw = Date.now() // for animations to work, so we know how long since last frame
-  // let animationTime = 1000 // ms for each animation
 
   // Control how zoomed in and small we can get!
   let minLength = 8 // level of granularity
@@ -29,31 +25,19 @@
   function init () {
     canvas = document.getElementById('triangle-canvas')
     let ctx = canvas.getContext('2d')
-    window.ctx = ctx // TODO: remove me after debug
 
     window.addEventListener('resize', resizeCanvas)
 
     canvas.addEventListener('click', (e) => {
       if (!moved) {
-        // console.log('CLICK');
         if (panning) console.log('PANNING')
-
-        // zoom
         animateZoom(e.shiftKey, true)
-
-        // centre at pan position (actually I don't really like this so commented out; nicer to zoom to crosshairs
-        /*
-        target_origin = {
-          x: origin.x - e.clientX/zoom + canvas.width/2/target_zoom, // do NOT round if you want it nice and smooth
-          y: origin.y - e.clientY/zoom + canvas.height/2/target_zoom
-        }; */
       }
       moved = false
     })
 
     // TODO: touchstart
     canvas.addEventListener('mousedown', (e) => {
-      // console.log('down');
       down = {
         x: e.clientX,
         y: e.clientY,
@@ -65,7 +49,6 @@
 
     // TODO: touchend
     canvas.addEventListener('mouseup', (e) => {
-      // console.log('up');
       panning = false
     })
 
@@ -111,18 +94,11 @@
 
   // animate a zoom in or out, optionally keeping the current central point
   function animateZoom (out, centre) {
-    // lastZoom = zoom
     targetZoom = zoom * (out ? 1 / zoomSpeed : zoomSpeed) // = target_zoom * instead of = zoom * might be better
     targetZoom = Math.round(Math.min(maxZoom, Math.max(1, targetZoom)) * 10) / 10
 
     if (centre) {
-      // lastOrigin = {
-      //   x: origin.x,
-      //   y: origin.y
-      // }
       targetOrigin = {
-        // x: canvas.width/2/target_zoom - canvas.width/2, // + canvas.width/2/zoom - origin.x,
-        // y: canvas.height/2/target_zoom - canvas.height/2 // + canvas.height/2/zoom - origin.y
         x: origin.x - canvas.width / 2 / zoom + canvas.width / 2 / targetZoom,
         y: origin.y - canvas.height / 2 / zoom + canvas.height / 2 / targetZoom
       }
@@ -134,10 +110,6 @@
   // scroll in a direction
   function animateScroll (nesw) {
     let val = 50 / zoom
-    // lastOrigin = {
-    //   x: origin.x,
-    //   y: origin.y
-    // }
     targetOrigin = {
       x: origin.x + (nesw === 'w' ? val : nesw === 'e' ? -val : 0),
       y: origin.y + (nesw === 'n' ? val : nesw === 's' ? -val : 0)
@@ -150,8 +122,6 @@
     const start = Date.now() // for animations and to check drawing speed
 
     if (redraw) {
-      // console.log('drawing');
-
       // reset our transformation save/restore stack
       stack = []
       coords = { x: 0, y: 0 }
@@ -175,9 +145,7 @@
         targetOrigin = false
       }
 
-      // console.log(origin.y, target_origin.y);
       if (targetZoom) {
-        // last_draw, animation_time
         zoom = (zoom + targetZoom) / 2
         if (Math.abs(zoom - targetZoom) < 0.1) zoom = targetZoom
       }
