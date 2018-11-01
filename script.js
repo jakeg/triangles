@@ -85,7 +85,6 @@
     canvas.height = document.body.clientHeight
     masterLength = Math.min(canvas.width, canvas.height / RATIO)
     masterX = (canvas.width - masterLength) / 2
-    console.log(canvas.width)
     redraw = true
   }
 
