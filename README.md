@@ -1,0 +1,2 @@
+# triangles
+Sierpinski triangle explorer
